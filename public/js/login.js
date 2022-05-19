@@ -16,17 +16,17 @@ formEl.addEventListener('submit', async (event) => {
   };
 
   // TODO front end validation
-  if (checkInputObj(loginObj)) {
-    console.log('checkInputObj ===');
-    const errorsArr = [];
-    // paimti loginObj ir patikrinti
-    // 1. ar reiksmes yra (ar nelygu '')
-    // jei lygu tada formuojam klaida
-    // 2.paziureti ar nera ivesties laukas netrumpesins uz 4 simbolius
-    // jei taip tai {messge: 'too short', field:'password'}
-    // handleError(errorsArr);
-    return;
-  }
+  // if (checkInputObj(loginObj)) {
+  //   console.log('checkInputObj ===');
+  //   const errorsArr = [];
+  //   // paimti loginObj ir patikrinti
+  //   // 1. ar reiksmes yra (ar nelygu '')
+  //   // jei lygu tada formuojam klaida
+  //   // 2.paziureti ar nera ivesties laukas netrumpesins uz 4 simbolius
+  //   // jei taip tai {messge: 'too short', field:'password'}
+  //   // handleError(errorsArr);
+  //   return;
+  // }
 
   console.log('loginObj ===', loginObj);
 
