@@ -1,21 +1,70 @@
 console.log('login here');
-const BASE_URL = 'http://localhost:3000';
+const BASE_URL = 'http://localhost:3009';
 
 const formEl = document.getElementById('login');
 const errroEl = document.getElementById('err');
 const emailInputEl = formEl.elements.email;
 const passwordInputEl = formEl.elements.password;
 
+let errorsArr = [];
+
+function addError(message, field) {
+  errorsArr.push({
+    message,
+    field,
+  });
+}
+
+// rules ['required', 'minLength-4']
+function checkInput(valueToCheck, field, rulesArr) {
+  // eslint-disable-next-line no-restricted-syntax
+  for (const rule of rulesArr) {
+    // rule === required
+    if (rule === 'required') {
+      if (valueToCheck === '') {
+        // pranesti apie klaida
+        addError('this field is required', field);
+        return;
+      }
+    }
+    // rule === minLength-X
+    if (rule.split('-')[0] === 'minLength') {
+      const min = rule.split('-')[1];
+      if (valueToCheck.length <= min) {
+        addError(`min length must be greater than ${min}`, field);
+      }
+    }
+    // rule === maxLength-X
+    if (rule.split('-')[0] === 'maxLength') {
+      const max = rule.split('-')[1];
+      if (valueToCheck.length >= max) {
+        addError(`Pass is too long. Length must be less than ${max}`, field);
+      }
+    }
+
+    // rule === email tikrinam ar yra @ raide
+    // extra ar yra '.' po @ raide
+  }
+}
+
 formEl.addEventListener('submit', async (event) => {
   event.preventDefault();
   console.log('js submit form');
-  clearErrors();
+
   const loginObj = {
     email: formEl.elements.email.value.trim(),
     password: formEl.elements.password.value.trim(),
   };
-
+  clearErrors();
   // TODO front end validation
+  checkInput(loginObj.email, 'email', ['required', 'minLength-4']);
+  checkInput(loginObj.password, 'password', [
+    'required',
+    'minLength-5',
+    'maxLength-10',
+  ]);
+  console.log('FE errorsArr ===', errorsArr);
+  handleError(errorsArr);
   // if (checkInputObj(loginObj)) {
   //   console.log('checkInputObj ===');
   //   const errorsArr = [];
@@ -29,6 +78,7 @@ formEl.addEventListener('submit', async (event) => {
   // }
 
   console.log('loginObj ===', loginObj);
+  return;
 
   const resp = await fetch(`${BASE_URL}/login`, {
     method: 'POST',
@@ -81,6 +131,7 @@ function handleError(msg) {
 }
 
 function clearErrors() {
+  errorsArr = [];
   emailInputEl.style.border = 'none';
   passwordInputEl.nextElementSibling.textContent = '';
   passwordInputEl.style.border = 'none';
@@ -94,3 +145,8 @@ function checkInputObj(obj) {
     if (value === '') return true;
   }
 }
+
+// const errrors = [
+//   { message: '"email" is not allowed to be empty', field: 'email' },
+//   { message: '"password" is not allowed to be empty', field: 'password' },
+// ];
